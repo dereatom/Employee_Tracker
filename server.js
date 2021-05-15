@@ -34,12 +34,7 @@ const connection = mysql.createConnection({
           "View roles",
           "View employees",
           "Update employee roles",
-          "Update manager",
-          "Display employees by manager",
           "Delete an employee",
-          "Delete a role",
-          "Delete a department",
-          "View utilized budget for a department",
           "quit"
         ],
         name: "option"
@@ -69,28 +64,11 @@ const connection = mysql.createConnection({
           case "Update employee roles":
             updateEmployeeRoles();
             break;
-          case "Update manager":
-            updateManager();
-            break;
-          case "Display employees by manager":
-            displayEmployeeByManager();
-            break;
           case "Delete an employee":
             deleteEmployee();
             break;
-          case "Delete roles":
-            deleteRoles();
-            break;
-          case "Delete departiment":
-            deletedepartiment();
-            break;
-          case "View total budget":
-            viewTotalBudget();
-            break;
-
           default:
             quitPromt();
-        
         }
       });
   }
@@ -210,7 +188,7 @@ function updateEmployeeRoles() {
     {
       type: "input",
       message: "Enter the employee's ID you want to be updated",
-      name: "updateEmploy"
+      name: "updateEmployeeRole"
     },
     {
       type: "input",
@@ -232,7 +210,34 @@ function updateEmployeeRoles() {
   }
 // Bonus questions start here to be continue
 //Delete Employee from Database
-  
+function deleteEmployee() {
+
+  inquirer.prompt([
+      {
+          name: "firstName",
+          type: "input",
+          message: "What is your Employee's First Name?"
+      },
+      {
+          name: "lastName",
+          type: "input",
+          message: "What is your Employee's Last Name?"
+      }
+  ]).then(function (answer) {
+
+      connection.query("DELETE FROM employee WHERE first_name = ? and last_name = ?", [answer.firstName, answer.lastName], function (err, res) {
+          if (err) {
+            throw err;
+          }
+
+          console.table(res);
+          startPrompt();
+      })
+
+
+  });
+
+}
 function quitPromt() {
   connection.end();
   console.log(`You Succefully Exit the app`);
